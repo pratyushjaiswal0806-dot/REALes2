@@ -1,0 +1,6 @@
+{
+  "name": "Sai Properties",
+  "description": "A premium Swiss International Style real estate showcase for Sai Properties, highlighting structured listings, technical property details, agency milestones, and enquiry management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
