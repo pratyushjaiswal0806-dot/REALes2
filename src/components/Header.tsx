@@ -33,7 +33,7 @@ export default function Header({ currentView, setView, selectedPropertyId, onCle
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b-4 border-black select-none">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 md:h-24 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 md:h-20 flex items-center justify-between">
         {/* Brand Wordmark */}
         <div 
           onClick={() => handleNavClick('home')} 
@@ -42,9 +42,6 @@ export default function Header({ currentView, setView, selectedPropertyId, onCle
         >
           <span className="font-sans font-black text-2xl md:text-3xl tracking-tighter text-black leading-none group-hover:text-swiss-red transition-colors duration-200">
             SAI PROPERTIES
-          </span>
-          <span className="font-mono text-[9px] text-gray-500 tracking-widest mt-1">
-            STRUCTURED • VERIFIED • YOURS
           </span>
         </div>
 

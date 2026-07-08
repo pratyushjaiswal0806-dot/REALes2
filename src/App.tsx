@@ -147,6 +147,7 @@ export default function App() {
               <SwissHero 
                 onExploreClick={() => setView('listings')} 
                 onAboutClick={() => setView('about')} 
+                onPropertyClick={handlePropertyClick}
               />
 
               {/* Stats Section */}

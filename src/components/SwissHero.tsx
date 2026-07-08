@@ -3,15 +3,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ArrowDown, ArrowUpRight, ShieldCheck, FileText, Compass } from 'lucide-react';
-import { motion } from 'motion/react';
+import { useState } from 'react';
+import { ArrowDown, ArrowUpRight, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { properties } from '../data';
+import { formatPrice } from './PropertyCard';
 
 interface SwissHeroProps {
   onExploreClick: () => void;
   onAboutClick: () => void;
+  onPropertyClick: (propertyId: string) => void;
 }
 
-export default function SwissHero({ onExploreClick, onAboutClick }: SwissHeroProps) {
+export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClick }: SwissHeroProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const featured = properties.slice(0, 3);
+  const currentProperty = featured[activeIndex];
+
+  const nextSlide = () => {
+    setActiveIndex((prev) => (prev + 1) % featured.length);
+  };
+
+  const prevSlide = () => {
+    setActiveIndex((prev) => (prev - 1 + featured.length) % featured.length);
+  };
+
   return (
     <section className="relative border-b-4 border-black select-none bg-white overflow-hidden" id="hero-section">
       {/* Structural Columns (Asymmetric 7:5 ratio) */}
@@ -28,10 +44,10 @@ export default function SwissHero({ onExploreClick, onAboutClick }: SwissHeroPro
           {/* Top Label */}
           <div className="flex items-center space-x-3">
             <span className="font-mono text-xs font-black bg-swiss-red text-white px-2.5 py-1 tracking-widest uppercase">
-              INDEX 01 / HERO
+              FEATURED ACQUISITIONS
             </span>
             <span className="font-mono text-xs tracking-widest text-black font-bold uppercase">
-              • WE DISMISS THE AMBIGUOUS
+              • SAI PROPERTIES DIRECTORY
             </span>
           </div>
 
@@ -44,9 +60,9 @@ export default function SwissHero({ onExploreClick, onAboutClick }: SwissHeroPro
             <p className="font-mono text-xs md:text-sm tracking-widest text-swiss-red font-black uppercase mb-6">
               STRUCTURED. VERIFIED. YOURS.
             </p>
-            
+
             <p className="font-sans font-bold text-sm md:text-base text-gray-700 max-w-xl tracking-wide leading-relaxed uppercase mb-8">
-              A RADICAL REAL ESTATE AGENCY ROOTED IN COLD OBJECTIVE FIDELITY. WE FORGO STAGE EFFECTS AND ADJECTIVAL CLICHÉS TO SUPPLY CERTIFIED CIVIL RATINGS AND MATHEMATICALLY STABLE LAND TITLES.
+              A PRECISE REAL ESTATE SELECTION BUILT ON INDEPENDENT CIVIL ENGINEERING AUDITS, 100% VERIFIED TITLE HISTORIES, AND STRUCTURAL METRICS.
             </p>
 
             {/* Double Action Grid */}
@@ -84,68 +100,113 @@ export default function SwissHero({ onExploreClick, onAboutClick }: SwissHeroPro
           </div>
         </motion.div>
 
-        {/* Right Side: Bauhaus-Style Abstract Geometric Composition */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
-          className="lg:col-span-5 relative min-h-[400px] lg:min-h-0 bg-swiss-muted flex items-center justify-center swiss-grid-pattern p-8 border-t-4 border-black lg:border-t-0"
-        >
-          
-          {/* Subtle diagonal lines underlay */}
-          <div className="absolute inset-0 swiss-diagonal opacity-60"></div>
-          
-          {/* Main Abstract Composition Shell */}
-          <div className="relative w-80 h-80 md:w-96 md:h-96 border-4 border-black bg-white flex items-center justify-center relative select-none">
-            {/* Grid background inside */}
-            <div className="absolute inset-0 swiss-dots opacity-80"></div>
+        {/* Right Side: High-End Real Estate Showcase Slider */}
+        <div className="lg:col-span-5 relative min-h-[550px] lg:min-h-0 bg-swiss-muted flex flex-col justify-between border-t-4 border-black lg:border-t-0 select-none overflow-hidden">
+          {/* Active slide image */}
+          <div className="absolute inset-0 z-0">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentProperty.id}
+                src={currentProperty.images[0]}
+                alt={currentProperty.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover grayscale brightness-75 contrast-125 transition-all duration-300"
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-10"></div>
+            {/* Subtle grid underlay on top of image */}
+            <div className="absolute inset-0 swiss-grid-pattern opacity-20 z-10 pointer-events-none"></div>
+          </div>
 
-            {/* Diagonal Divider Axis */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[141%] h-1 bg-black rotate-45 transform origin-center opacity-10"></div>
+          {/* Top annotation or metadata badge */}
+          <div className="relative z-20 p-6 md:p-8 flex justify-between items-start">
+            <span className="bg-swiss-red text-white px-3 py-1 text-[10px] font-sans font-black tracking-widest border border-white uppercase">
+              {currentProperty.status.replace('_', ' ')}
+            </span>
+            <div className="bg-white border-2 border-black text-black px-3 py-1 text-[9px] font-mono tracking-widest uppercase font-bold">
+              REGISTRY: {currentProperty.id}
             </div>
+          </div>
 
-            {/* Swiss Red Accent Core Square */}
-            <div className="absolute top-8 left-8 w-24 h-24 bg-swiss-red border-2 border-black z-10 flex items-center justify-center hover:translate-x-1 hover:translate-y-1 transition-transform cursor-pointer">
-              <span className="font-mono text-2xl font-black text-white">01</span>
-            </div>
+          {/* Bottom Property Info Card & Controls */}
+          <div className="relative z-20 p-6 md:p-8">
+            <div className="border-4 border-black bg-white p-6 relative shadow-[8px_8px_0_0_#FF3000] transition-all duration-200">
+              <div className="flex justify-between items-start mb-2">
+                <span className="font-mono text-[9px] text-swiss-red tracking-widest uppercase font-black">
+                  {currentProperty.type} SPECIFICATION
+                </span>
+                <span className="font-mono text-[10px] font-black text-black">
+                  0{activeIndex + 1} / 0{featured.length}
+                </span>
+              </div>
 
-            {/* Large Hollow black circle */}
-            <div className="absolute w-56 h-56 border-4 border-black rounded-full flex items-center justify-center hover:scale-105 transition-transform duration-300">
-              {/* Inner Solid Muted Gray Circle */}
-              <div className="w-32 h-32 bg-swiss-muted border-2 border-black rounded-full flex items-center justify-center">
-                <Compass className="w-10 h-10 text-black animate-[spin_20s_linear_infinite]" />
+              <h3 className="font-sans font-black text-2xl tracking-tighter text-black uppercase mb-1 leading-tight">
+                {currentProperty.title}
+              </h3>
+              
+              <div className="flex items-center space-x-1.5 text-[11px] font-sans font-bold text-gray-500 uppercase mb-4">
+                <MapPin className="w-3.5 h-3.5 text-swiss-red" />
+                <span>{currentProperty.location}</span>
+              </div>
+
+              {/* Specs Row */}
+              <div className="grid grid-cols-3 text-center border-t-2 border-b-2 border-black divide-x divide-black bg-swiss-muted/30 mb-6">
+                <div className="py-2 flex flex-col justify-center">
+                  <span className="font-mono text-[8px] text-gray-500 uppercase">CONFIG</span>
+                  <span className="font-sans font-bold text-xs text-black uppercase truncate px-1">
+                    {currentProperty.configuration.split(' ')[0]} {currentProperty.configuration.split(' ')[1] || ''}
+                  </span>
+                </div>
+                <div className="py-2 flex flex-col justify-center">
+                  <span className="font-mono text-[8px] text-gray-500 uppercase">AREA</span>
+                  <span className="font-sans font-bold text-xs text-black">
+                    {currentProperty.areaSqFt} SQFT
+                  </span>
+                </div>
+                <div className="py-2 flex flex-col justify-center">
+                  <span className="font-mono text-[8px] text-gray-500 uppercase">VALUE</span>
+                  <span className="font-sans font-black text-xs text-swiss-red">
+                    {formatPrice(currentProperty.price, currentProperty.status).split(' ')[0]}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action buttons inside the card */}
+              <div className="flex items-stretch gap-2 h-12">
+                {/* Navigation controls */}
+                <div className="flex border-2 border-black">
+                  <button 
+                    onClick={prevSlide}
+                    className="w-12 bg-white hover:bg-black hover:text-white flex items-center justify-center border-r-2 border-black transition-colors"
+                    aria-label="Previous property"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button 
+                    onClick={nextSlide}
+                    className="w-12 bg-white hover:bg-black hover:text-white flex items-center justify-center transition-colors"
+                    aria-label="Next property"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* View Details Button */}
+                <button
+                  onClick={() => onPropertyClick(currentProperty.id)}
+                  className="flex-1 bg-black text-white hover:bg-swiss-red flex items-center justify-center font-sans font-black text-xs tracking-widest transition-colors duration-150 rounded-none border-2 border-black group"
+                >
+                  VIEW REGISTRY
+                  <ArrowUpRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </button>
               </div>
             </div>
-
-            {/* Vertical Bold Bar */}
-            <div className="absolute right-12 top-0 bottom-16 w-8 bg-black z-0"></div>
-
-            {/* Horizontal Technical Rule lines */}
-            <div className="absolute left-0 right-0 bottom-12 h-0.5 bg-black"></div>
-            <div className="absolute left-0 right-0 bottom-16 h-0.5 bg-swiss-red"></div>
-
-            {/* Small Floating Coordinate tag */}
-            <div className="absolute bottom-4 right-4 bg-black text-white px-3 py-1 text-[9px] font-mono tracking-widest uppercase">
-              GRID: L-KP-5
-            </div>
-
-            {/* Small Floating Verification Shield */}
-            <div className="absolute bottom-20 left-4 bg-white border-2 border-black p-2 z-20 flex items-center space-x-2">
-              <ShieldCheck className="w-5 h-5 text-swiss-red" />
-              <span className="font-mono text-[8px] font-black tracking-wider">CERTIFIED SAFE</span>
-            </div>
           </div>
-
-          {/* Floating graphic annotation card for architectural aesthetic */}
-          <div className="absolute top-4 right-4 bg-white border-2 border-black p-3 text-[9px] font-mono tracking-widest uppercase leading-tight hidden xl:block shadow-[4px_4px_0_0_#000000]">
-            TYPE SPECS:<br />
-            1. SANS-SERIF OBJECTIVE<br />
-            2. GRID DIVISION 24px<br />
-            3. HIERARCHY SCALE 3:1
-          </div>
-        </motion.div>
+        </div>
         
       </div>
       
