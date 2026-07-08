@@ -78,14 +78,14 @@ export default function ListingFilterBar({
     <div className="bg-white border-4 border-black select-none" id="listing-filter-bar">
       
       {/* Segmented Type Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 border-b-2 border-black divide-x-2 divide-black">
+      <div className="flex overflow-x-auto whitespace-nowrap border-b-2 border-black divide-x-2 divide-black">
         {types.map((t) => {
           const isActive = selectedType === t.value;
           return (
             <button
               key={t.value}
               onClick={() => setSelectedType(t.value)}
-              className={`py-4 px-3 font-sans font-black text-xs tracking-widest text-center transition-colors duration-150 rounded-none first:border-l-0 ${isActive ? 'bg-black text-white' : 'bg-white text-black hover:bg-swiss-muted'}`}
+              className={`flex-shrink-0 flex-1 py-4 px-4 font-sans font-black text-xs tracking-widest text-center transition-colors duration-150 rounded-none first:border-l-0 ${isActive ? 'bg-black text-white' : 'bg-white text-black hover:bg-swiss-muted'}`}
               id={`filter-type-${t.value.toLowerCase()}`}
             >
               {t.label}
@@ -95,17 +95,17 @@ export default function ListingFilterBar({
       </div>
 
       {/* Main Filter Configuration Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-black bg-white">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-12 bg-white">
         
         {/* City Filter */}
-        <div className="lg:col-span-3 p-4 flex flex-col justify-center">
-          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block">
-            LOCATION / REGION
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-b-2 border-r-2 lg:border-b-0 border-black">
+          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
+            LOCATION
           </label>
           <select
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
-            className="w-full bg-white border-2 border-black h-10 px-3 text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
+            className="w-full bg-white border-2 border-black h-10 px-2 sm:px-3 text-[10px] sm:text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
             id="filter-select-city"
           >
             {cities.map((city) => (
@@ -117,14 +117,14 @@ export default function ListingFilterBar({
         </div>
 
         {/* Status Filter */}
-        <div className="lg:col-span-3 p-4 flex flex-col justify-center">
-          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block">
-            TRANSACTION STATUS
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-b-2 lg:border-b-0 lg:border-r-2 border-black">
+          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
+            STATUS
           </label>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="w-full bg-white border-2 border-black h-10 px-3 text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
+            className="w-full bg-white border-2 border-black h-10 px-2 sm:px-3 text-[10px] sm:text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
             id="filter-select-status"
           >
             {statuses.map((status) => (
@@ -136,14 +136,14 @@ export default function ListingFilterBar({
         </div>
 
         {/* Config Filter */}
-        <div className="lg:col-span-3 p-4 flex flex-col justify-center">
-          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block">
-            UNIT CONFIGURATION
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-r-2 border-black lg:border-r-2">
+          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
+            CONFIG
           </label>
           <select
             value={selectedConfig}
             onChange={(e) => setSelectedConfig(e.target.value)}
-            className="w-full bg-white border-2 border-black h-10 px-3 text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
+            className="w-full bg-white border-2 border-black h-10 px-2 sm:px-3 text-[10px] sm:text-xs font-sans font-black tracking-wider uppercase focus:border-swiss-red focus:outline-none rounded-none"
             id="filter-select-config"
           >
             {configs.map((config) => (
@@ -155,25 +155,25 @@ export default function ListingFilterBar({
         </div>
 
         {/* Price Inputs */}
-        <div className="lg:col-span-3 p-4 flex flex-col justify-center">
-          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block">
-            PRICE LIMITS (INR)
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center">
+          <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
+            PRICE LIMITS
           </label>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1 sm:gap-2">
             <input
               type="number"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="MIN INR"
-              className="bg-transparent border-b-2 border-black py-1 text-xs font-sans font-bold uppercase tracking-wider focus:border-swiss-red focus:outline-none text-center"
+              placeholder="MIN"
+              className="bg-transparent border-b-2 border-black py-1 text-[10px] sm:text-xs font-sans font-bold uppercase tracking-wider focus:border-swiss-red focus:outline-none text-center"
               id="filter-input-minprice"
             />
             <input
               type="number"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="MAX INR"
-              className="bg-transparent border-b-2 border-black py-1 text-xs font-sans font-bold uppercase tracking-wider focus:border-swiss-red focus:outline-none text-center"
+              placeholder="MAX"
+              className="bg-transparent border-b-2 border-black py-1 text-[10px] sm:text-xs font-sans font-bold uppercase tracking-wider focus:border-swiss-red focus:outline-none text-center"
               id="filter-input-maxprice"
             />
           </div>

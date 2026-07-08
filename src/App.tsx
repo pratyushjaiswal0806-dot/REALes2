@@ -483,7 +483,7 @@ export default function App() {
               </div>
 
               {/* Filter bar */}
-              <div className="mb-12 sticky top-24 z-30">
+              <div className="mb-12 lg:sticky lg:top-24 z-30">
                 <ListingFilterBar
                   selectedType={selectedType}
                   setSelectedType={setSelectedType}
