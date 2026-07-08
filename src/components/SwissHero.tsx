@@ -39,7 +39,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="lg:col-span-7 flex flex-col justify-between p-8 md:p-12 lg:p-16 lg:border-r-4 border-black relative z-10"
+          className="lg:col-span-7 flex flex-col justify-between p-6 md:p-8 lg:p-10 lg:border-r-4 border-black relative z-10"
         >
           {/* Top Label */}
           <div className="flex items-center space-x-3">
@@ -52,16 +52,16 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
           </div>
 
           {/* Core Typography Block */}
-          <div className="my-12">
-            <h1 className="font-sans font-black text-6xl sm:text-7xl md:text-8xl xl:text-[7.5rem] leading-[0.9] tracking-tighter text-black hover:text-swiss-red transition-colors duration-300 cursor-default uppercase mb-4">
+          <div className="my-6">
+            <h1 className="font-sans font-black text-5xl sm:text-6xl md:text-7xl xl:text-[5rem] leading-[0.9] tracking-tighter text-black hover:text-swiss-red transition-colors duration-300 cursor-default uppercase mb-3">
               SAI PROPERTIES
             </h1>
             
-            <p className="font-mono text-xs md:text-sm tracking-widest text-swiss-red font-black uppercase mb-6">
+            <p className="font-mono text-xs md:text-sm tracking-widest text-swiss-red font-black uppercase mb-4">
               STRUCTURED. VERIFIED. YOURS.
             </p>
 
-            <p className="font-sans font-bold text-sm md:text-base text-gray-700 max-w-xl tracking-wide leading-relaxed uppercase mb-8">
+            <p className="font-sans font-bold text-sm text-gray-700 max-w-xl tracking-wide leading-relaxed uppercase mb-6">
               A PRECISE REAL ESTATE SELECTION BUILT ON INDEPENDENT CIVIL ENGINEERING AUDITS, 100% VERIFIED TITLE HISTORIES, AND STRUCTURAL METRICS.
             </p>
 
@@ -101,7 +101,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
         </motion.div>
 
         {/* Right Side: High-End Real Estate Showcase Slider */}
-        <div className="lg:col-span-5 relative min-h-[550px] lg:min-h-0 bg-swiss-muted flex flex-col justify-between border-t-4 border-black lg:border-t-0 select-none overflow-hidden">
+        <div className="lg:col-span-5 relative min-h-[450px] lg:min-h-0 bg-swiss-muted flex flex-col justify-between border-t-4 border-black lg:border-t-0 select-none overflow-hidden">
           {/* Active slide image */}
           <div className="absolute inset-0 z-0">
             <AnimatePresence mode="wait">
@@ -110,7 +110,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
                 src={currentProperty.images[0]}
                 alt={currentProperty.title}
                 referrerPolicy="no-referrer"
-                className="w-full h-full object-cover grayscale brightness-75 contrast-125 transition-all duration-300"
+                className="w-full h-full object-cover brightness-90 contrast-110 transition-all duration-300"
                 initial={{ opacity: 0, scale: 1.05 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
@@ -123,7 +123,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
           </div>
 
           {/* Top annotation or metadata badge */}
-          <div className="relative z-20 p-6 md:p-8 flex justify-between items-start">
+          <div className="relative z-20 p-4 md:p-6 flex justify-between items-start">
             <span className="bg-swiss-red text-white px-3 py-1 text-[10px] font-sans font-black tracking-widest border border-white uppercase">
               {currentProperty.status.replace('_', ' ')}
             </span>
@@ -133,8 +133,8 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
           </div>
 
           {/* Bottom Property Info Card & Controls */}
-          <div className="relative z-20 p-6 md:p-8">
-            <div className="border-4 border-black bg-white p-6 relative shadow-[8px_8px_0_0_#FF3000] transition-all duration-200">
+          <div className="relative z-20 p-4 md:p-6">
+            <div className="border-4 border-black bg-white p-4 relative shadow-[8px_8px_0_0_#FF3000] transition-all duration-200">
               <div className="flex justify-between items-start mb-2">
                 <span className="font-mono text-[9px] text-swiss-red tracking-widest uppercase font-black">
                   {currentProperty.type} SPECIFICATION
@@ -154,7 +154,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
               </div>
 
               {/* Specs Row */}
-              <div className="grid grid-cols-3 text-center border-t-2 border-b-2 border-black divide-x divide-black bg-swiss-muted/30 mb-6">
+              <div className="grid grid-cols-3 text-center border-t-2 border-b-2 border-black divide-x divide-black bg-swiss-muted/30 mb-4">
                 <div className="py-2 flex flex-col justify-center">
                   <span className="font-mono text-[8px] text-gray-500 uppercase">CONFIG</span>
                   <span className="font-sans font-bold text-xs text-black uppercase truncate px-1">
@@ -210,14 +210,7 @@ export default function SwissHero({ onExploreClick, onAboutClick, onPropertyClic
         
       </div>
       
-      {/* Scroll indicator anchor */}
-      <button 
-        onClick={onExploreClick}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white border-2 border-black w-12 h-12 rounded-none flex items-center justify-center hover:bg-swiss-red hover:text-white transition-colors duration-150 z-20 animate-bounce"
-        aria-label="Scroll down"
-      >
-        <ArrowDown className="w-5 h-5" />
-      </button>
+
     </section>
   );
 }
