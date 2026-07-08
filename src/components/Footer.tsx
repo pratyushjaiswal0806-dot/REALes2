@@ -31,7 +31,7 @@ export default function Footer({ setView, onClearSelectedProperty }: FooterProps
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-6 pt-8 border-t border-gray-200">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-6 pt-8 border-t border-gray-200">
             <div>
               <span className="font-mono text-[10px] text-swiss-red tracking-widest block mb-2">01. GEOLOCATION</span>
               <span className="font-sans font-bold text-xs tracking-wider block">WESTERN METROPOLITAN</span>

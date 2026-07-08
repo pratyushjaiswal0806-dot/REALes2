@@ -152,7 +152,7 @@ export default function App() {
 
               {/* Stats Section */}
               <section className="bg-black text-white border-b-4 border-black select-none">
-                <div className="grid grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-gray-800">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-gray-800">
                   {stats.map((stat, i) => (
                     <div key={i} className="p-8 md:p-12 flex flex-col justify-between group cursor-pointer hover:bg-swiss-red transition-colors duration-200">
                       <span className="font-mono text-[10px] text-gray-400 tracking-widest block mb-6 uppercase">
@@ -510,7 +510,7 @@ export default function App() {
                   {/* Subtle Grid underlay for full site aesthetic */}
                   <div className="absolute inset-0 swiss-grid-pattern opacity-10 pointer-events-none"></div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
                     {sortedProperties.map((p) => (
                       <PropertyCard 
                         key={p.id} 

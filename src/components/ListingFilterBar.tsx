@@ -95,10 +95,10 @@ export default function ListingFilterBar({
       </div>
 
       {/* Main Filter Configuration Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-12 bg-white">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 bg-white">
         
         {/* City Filter */}
-        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-b-2 border-r-2 lg:border-b-0 border-black">
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-b-2 sm:border-r-2 lg:border-b-0 border-black">
           <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
             LOCATION
           </label>
@@ -136,7 +136,7 @@ export default function ListingFilterBar({
         </div>
 
         {/* Config Filter */}
-        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-r-2 border-black lg:border-r-2">
+        <div className="lg:col-span-3 p-3 sm:p-4 flex flex-col justify-center border-b-2 sm:border-b-0 sm:border-r-2 border-black">
           <label className="font-mono text-[9px] text-swiss-red tracking-widest uppercase mb-1 block truncate">
             CONFIG
           </label>

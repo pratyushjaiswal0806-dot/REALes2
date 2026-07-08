@@ -33,7 +33,7 @@ export default function Header({ currentView, setView, selectedPropertyId, onCle
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b-4 border-black select-none">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 md:h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 h-16 lg:h-20 flex items-center justify-between">
         {/* Brand Wordmark */}
         <div 
           onClick={() => handleNavClick('home')} 
@@ -46,7 +46,7 @@ export default function Header({ currentView, setView, selectedPropertyId, onCle
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-stretch h-full" id="header-desktop-navigation">
+        <nav className="hidden lg:flex items-stretch h-full animate-fade-in" id="header-desktop-navigation">
           {navItems.map((item) => {
             const isActive = currentView === item.id && (item.id !== 'listings' || !selectedPropertyId);
             return (
@@ -78,33 +78,34 @@ export default function Header({ currentView, setView, selectedPropertyId, onCle
           })}
         </nav>
 
-        {/* Call to Action - Quick Inquiry */}
-        <div className="hidden lg:flex items-center">
+        {/* Actions Container */}
+        <div className="flex items-center space-x-3 md:space-x-4">
+          {/* Call to Action - Quick Inquiry */}
           <button 
             onClick={() => handleNavClick('contact')}
-            className="border-2 border-black h-12 px-6 flex items-center justify-center font-sans font-black text-xs tracking-widest bg-black text-white hover:bg-swiss-red hover:border-swiss-red hover:text-white transition-all duration-150 rounded-none group"
+            className="border-2 border-black h-10 md:h-12 px-3 md:px-6 flex items-center justify-center font-sans font-black text-[10px] md:text-xs tracking-widest bg-black text-white hover:bg-swiss-red hover:border-swiss-red hover:text-white transition-all duration-150 rounded-none group"
             id="header-cta-button"
           >
             ENQUIRE NOW
-            <ArrowUpRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight className="ml-1 md:ml-2 w-3.5 h-3.5 md:w-4 md:h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </button>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="lg:hidden p-2 text-black hover:text-swiss-red transition-colors border-2 border-black h-10 w-10 flex items-center justify-center bg-white"
+            aria-label="Toggle navigation menu"
+            id="header-mobile-toggle"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-
-        {/* Mobile Hamburger Toggle */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="md:hidden p-2 text-black hover:text-swiss-red transition-colors"
-          aria-label="Toggle navigation menu"
-          id="header-mobile-toggle"
-        >
-          {isMobileMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-        </button>
       </div>
 
       {/* Mobile Full-Screen Overlay Menu */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 top-[84px] md:top-[100px] z-40 bg-white border-t-4 border-black flex flex-col justify-between"
+          className="fixed inset-0 top-16 lg:top-20 z-40 bg-white border-t-4 border-black flex flex-col justify-between"
           id="header-mobile-menu-overlay"
         >
           <div className="swiss-grid-pattern flex-grow flex flex-col justify-center px-6 py-12">
