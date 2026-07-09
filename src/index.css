@@ -64,3 +64,77 @@ body {
   background: #FF3000;
 }
 
+/* ─── Motion Design: Keyframe Animations ─── */
+
+/* Horizontal rule expansion — used for section dividers */
+@keyframes rule-expand {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Pulse ring effect for active elements */
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Slow drift for background texture layers */
+@keyframes grain-drift {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-2%, 1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Vertical marquee for decorative text strips */
+@keyframes marquee-vertical {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+/* Horizontal marquee */
+@keyframes marquee-horizontal {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Blink for status indicators */
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+/* Scanning line effect */
+@keyframes scan-line {
+  0%   { top: -2px; }
+  100% { top: 100%; }
+}
+
+.animate-rule-expand {
+  animation: rule-expand 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: left center;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.animate-grain-drift {
+  animation: grain-drift 20s ease-in-out infinite;
+}
+
+.animate-marquee-h {
+  animation: marquee-horizontal 30s linear infinite;
+}
+
+.animate-status-blink {
+  animation: status-blink 2s ease-in-out infinite;
+}
+
+/* ─── Prefers Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

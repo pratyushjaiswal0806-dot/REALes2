@@ -3,8 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useSpring, useMotionValueEvent, useInView } from 'motion/react';
+
+const expoOut = [0.16, 1, 0.3, 1] as const;
 import { 
   ArrowUpRight, 
   MapPin, 
@@ -33,6 +35,19 @@ import { properties, agents, journalPosts, testimonials, faqs, milestones, stats
 import { Property, JournalPost } from './types';
 
 export default function App() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setScrollPercentage(Math.round(latest * 100));
+  });
+
   const [currentView, setView] = useState<string>('home');
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   
@@ -123,6 +138,20 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* Scroll Progress Bar - Swiss Style */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-swiss-red origin-left z-[100]"
+        style={{ scaleX }}
+      />
+      
+      {/* Scroll Progress Percentage - Strategic Corner Placement */}
+      <div className="fixed bottom-6 right-6 z-[100] pointer-events-none mix-blend-difference">
+        <div className="font-mono text-[10px] font-black tracking-[0.2em] uppercase flex flex-col items-end text-white">
+          <span>{scrollPercentage.toString().padStart(3, '0')}%</span>
+          <span className="text-[8px] text-gray-400">DEPTH</span>
+        </div>
+      </div>
+
       {/* Header component */}
       <Header 
         currentView={currentView} 
@@ -154,7 +183,14 @@ export default function App() {
               <section className="bg-black text-white border-b-4 border-black select-none">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-gray-800">
                   {stats.map((stat, i) => (
-                    <div key={i} className="p-8 md:p-12 flex flex-col justify-between group cursor-pointer hover:bg-swiss-red transition-colors duration-200">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.6, delay: i * 0.1, ease: expoOut }}
+                      className="p-8 md:p-12 flex flex-col justify-between group cursor-pointer hover:bg-swiss-red transition-colors duration-200"
+                    >
                       <span className="font-mono text-[10px] text-gray-400 tracking-widest block mb-6 uppercase">
                         METRIC MODULE 0{i + 1}
                       </span>
@@ -166,14 +202,20 @@ export default function App() {
                           {stat.label}
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </section>
 
               {/* Section 01: Featured Properties */}
               <section className="py-20 md:py-28 border-b-4 border-black px-6 md:px-12 max-w-7xl mx-auto w-full">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-start">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.7, ease: expoOut }}
+                  className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-start"
+                >
                   <div className="lg:col-span-8">
                     <div className="flex items-center space-x-3 mb-4">
                       <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase">
@@ -197,15 +239,16 @@ export default function App() {
                       <ArrowRight className="ml-2 w-4 h-4" />
                     </button>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Grid of Property Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {featuredProperties.map((p) => (
+                  {featuredProperties.map((p, i) => (
                     <PropertyCard 
                       key={p.id} 
                       property={p} 
-                      onClick={handlePropertyClick} 
+                      onClick={handlePropertyClick}
+                      index={i}
                     />
                   ))}
                 </div>
@@ -215,7 +258,13 @@ export default function App() {
               <section className="border-b-4 border-black bg-swiss-muted/50 select-none overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[500px]">
                   {/* Left explanation block */}
-                  <div className="lg:col-span-4 p-8 md:p-12 lg:p-16 flex flex-col justify-between border-b-4 lg:border-b-0 lg:border-r-4 border-black bg-white">
+                  <motion.div
+                    initial={{ opacity: 0, x: -40 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.7, ease: expoOut }}
+                    className="lg:col-span-4 p-8 md:p-12 lg:p-16 flex flex-col justify-between border-b-4 lg:border-b-0 lg:border-r-4 border-black bg-white"
+                  >
                     <div>
                       <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase block mb-4">
                         02. WHY SAI PROPERTIES
@@ -227,13 +276,19 @@ export default function App() {
                     <p className="font-sans text-xs text-gray-600 leading-relaxed uppercase">
                       THE REAL ESTATE SECTOR REPEATEDLY SELLS DREAMS EMBELLISHED WITH VISUAL CHROME. WE REJECT THE TRADITIONAL EMOTIONAL PLAYBOOK. OUR VALUES EMBODY COLD SYSTEMIC GEOMETRIES, TRIPLE-VERIFIED PAPERS, AND REINFORCED METRICS.
                     </p>
-                  </div>
+                  </motion.div>
 
                   {/* Right Bento Grid */}
                   <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 divide-y-2 md:divide-y-0 md:divide-x-2 divide-black">
                     
                     {/* Bento Card 1 */}
-                    <div className="p-8 md:p-12 flex flex-col justify-between bg-white hover:bg-swiss-red hover:text-white transition-colors duration-200 group">
+                    <motion.div
+                      initial={{ opacity: 0, x: 40 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.6, delay: 0.1, ease: expoOut }}
+                      className="p-8 md:p-12 flex flex-col justify-between bg-white hover:bg-swiss-red hover:text-white transition-colors duration-200 group"
+                    >
                       <div className="flex justify-between items-start mb-12">
                         <span className="font-mono text-xs font-black text-swiss-red group-hover:text-white uppercase tracking-widest">
                           02A / CIVIL METRICS
@@ -248,10 +303,16 @@ export default function App() {
                           WE COMMISSION INDEPENDENT CIVIL ENGINEERING FIRMS TO COMPREHENSIVELY AUDIT EVERY CONCRETE CORE AND ENERGY COEFFICIENT IN OUR BUILDINGS BEFORE RATIFYING THE DATA SHEET.
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
 
                     {/* Bento Card 2 */}
-                    <div className="p-8 md:p-12 flex flex-col justify-between bg-white hover:bg-swiss-red hover:text-white transition-colors duration-200 group border-t-2 md:border-t-0 border-black">
+                    <motion.div
+                      initial={{ opacity: 0, x: 40 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.6, delay: 0.25, ease: expoOut }}
+                      className="p-8 md:p-12 flex flex-col justify-between bg-white hover:bg-swiss-red hover:text-white transition-colors duration-200 group border-t-2 md:border-t-0 border-black"
+                    >
                       <div className="flex justify-between items-start mb-12">
                         <span className="font-mono text-xs font-black text-swiss-red group-hover:text-white uppercase tracking-widest">
                           02B / TRANSACTION
@@ -266,7 +327,7 @@ export default function App() {
                           TITLE SEARCH REPORTS ARE COMPILED GOING BACK 30 YEARS. WE NEVER ONBOARD ANY RESIDENCE WITH RESOLUTELY PENDING DISPUTES OR UNCHECKED DEBT LIENS.
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
 
                   </div>
                 </div>
@@ -274,14 +335,20 @@ export default function App() {
 
               {/* Section 03: Process Steps */}
               <section className="py-20 md:py-28 border-b-4 border-black px-6 md:px-12 max-w-7xl mx-auto w-full">
-                <div className="mb-16">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.7, ease: expoOut }}
+                  className="mb-16"
+                >
                   <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase block mb-2">
                     03. PROTOCOL
                   </span>
                   <h2 className="font-sans font-black text-4xl sm:text-5xl lg:text-7xl tracking-tighter uppercase leading-none">
                     TRANSACTION PROCESS
                   </h2>
-                </div>
+                </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {[
@@ -290,7 +357,15 @@ export default function App() {
                     { nr: '03', title: 'LEGAL PROTOCOL', desc: 'MANDATORY VERIFICATION OF INDEPENDENT SEARCH CERTIFICATES, APPROVED PLANS, TITLE DEEDS, AND TAX CLEARANCE GRIDS.' },
                     { nr: '04', title: 'SECURE EXECUTION', desc: 'SEAMLESS CONTRACT FORMULATION AND PHYSICAL HANDOVER ACCORDING TO SYSTEMATIC REGISTERED DEEDS AND STAMP CODES.' }
                   ].map((step, i) => (
-                    <div key={i} className="border-2 border-black p-6 bg-white relative hover:-translate-y-1 transition-transform duration-200">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.5, delay: i * 0.12, ease: expoOut }}
+                      whileHover={{ y: -6 }}
+                      className="border-2 border-black p-6 bg-white relative transition-shadow duration-200 hover:shadow-[4px_4px_0_0_#FF3000]"
+                    >
                       <span className="font-sans font-black text-4xl text-swiss-red block mb-6">
                         {step.nr}.
                       </span>
@@ -300,7 +375,7 @@ export default function App() {
                       <p className="font-sans text-xs text-gray-500 leading-relaxed uppercase">
                         {step.desc}
                       </p>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </section>
@@ -308,21 +383,32 @@ export default function App() {
               {/* Section 04: Journal / Insights */}
               <section className="border-b-4 border-black bg-swiss-muted select-none swiss-grid-pattern py-20 md:py-28">
                 <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-                  <div className="mb-16">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.7, ease: expoOut }}
+                    className="mb-16"
+                  >
                     <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase block mb-2">
                       04. PUBLICATIONS
                     </span>
                     <h2 className="font-sans font-black text-4xl sm:text-5xl lg:text-7xl tracking-tighter uppercase leading-none">
                       THE ARCHITECTURAL JOURNAL
                     </h2>
-                  </div>
+                  </motion.div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {journalPosts.map((post) => (
-                      <div 
+                    {journalPosts.map((post, i) => (
+                      <motion.div 
                         key={post.id}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.5, delay: i * 0.1, ease: expoOut }}
+                        whileHover={{ y: -4 }}
                         onClick={() => setActiveJournalPost(post)}
-                        className="bg-white border-2 border-black p-8 flex flex-col justify-between hover:border-swiss-red cursor-pointer transition-colors duration-200 relative group"
+                        className="bg-white border-2 border-black p-8 flex flex-col justify-between hover:border-swiss-red cursor-pointer transition-[border-color] duration-200 relative group"
                       >
                         <div>
                           <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
@@ -344,10 +430,10 @@ export default function App() {
                         <div className="mt-8 pt-4 border-t border-black/10 flex items-center justify-between text-xs font-mono font-bold">
                           <span>{post.date}</span>
                           <span className="text-swiss-red flex items-center">
-                            READ PAPER <ArrowUpRight className="ml-1 w-4 h-4" />
+                            READ PAPER <ArrowUpRight className="ml-1 w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                           </span>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -359,7 +445,13 @@ export default function App() {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                     
                     {/* Left title info */}
-                    <div className="lg:col-span-4">
+                    <motion.div
+                      initial={{ opacity: 0, x: -30 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.7, ease: expoOut }}
+                      className="lg:col-span-4"
+                    >
                       <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase block mb-2">
                         05. REPUTATION
                       </span>
@@ -369,14 +461,19 @@ export default function App() {
                       <p className="font-sans text-xs text-gray-500 uppercase leading-relaxed">
                         TRANSACTION RATINGS SECURED THROUGH SYSTEMATIC LEGAL ADHERENCE AND ABSOLUTE TRANSPARENCY CODES.
                       </p>
-                    </div>
+                    </motion.div>
 
                     {/* Right testimonial blocks */}
                     <div className="lg:col-span-8 space-y-8">
                       {testimonials.map((test, i) => (
-                        <div 
-                          key={test.id} 
-                          className="border-2 border-black p-8 bg-white hover:-translate-y-1 hover:border-swiss-red hover:shadow-[4px_4px_0_0_#000000] transition-all duration-200"
+                        <motion.div 
+                          key={test.id}
+                          initial={{ opacity: 0, y: 30 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-40px" }}
+                          transition={{ duration: 0.5, delay: i * 0.1, ease: expoOut }}
+                          whileHover={{ y: -4 }}
+                          className="border-2 border-black p-8 bg-white hover:border-swiss-red hover:shadow-[4px_4px_0_0_#000000] transition-[border-color,box-shadow] duration-200"
                         >
                           <p className="font-sans font-bold text-sm leading-relaxed mb-6 uppercase text-black">
                             "{test.quote}"
@@ -394,7 +491,7 @@ export default function App() {
                               {test.date}
                             </span>
                           </div>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
 
@@ -405,21 +502,31 @@ export default function App() {
               {/* FAQ Section */}
               <section className="py-20 md:py-28 border-b-4 border-black bg-swiss-muted select-none">
                 <div className="max-w-3xl mx-auto px-6 w-full">
-                  <div className="text-center mb-16">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-60px" }}
+                    transition={{ duration: 0.7, ease: expoOut }}
+                    className="text-center mb-16"
+                  >
                     <span className="font-mono text-xs font-black text-swiss-red tracking-widest uppercase block mb-2">
                       06. FREQUENT SHEET
                     </span>
                     <h2 className="font-sans font-black text-4xl sm:text-5xl tracking-tighter uppercase">
                       RESOLUTE INQUIRIES
                     </h2>
-                  </div>
+                  </motion.div>
 
                   <div className="space-y-4">
-                    {faqs.map((faq) => {
+                    {faqs.map((faq, i) => {
                       const isExpanded = expandedFaqId === faq.id;
                       return (
-                        <div 
-                          key={faq.id} 
+                        <motion.div 
+                          key={faq.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-30px" }}
+                          transition={{ duration: 0.4, delay: i * 0.06, ease: expoOut }}
                           className="border-2 border-black bg-white transition-all duration-150"
                         >
                           <button
@@ -427,17 +534,31 @@ export default function App() {
                             className="w-full text-left p-6 flex items-center justify-between font-sans font-black text-sm tracking-tight uppercase hover:bg-swiss-muted"
                           >
                             <span>{faq.question}</span>
-                            <div className="bg-black text-white p-1 rounded-none">
-                              {isExpanded ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                            </div>
+                            <motion.div
+                              animate={{ rotate: isExpanded ? 45 : 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="bg-black text-white p-1 rounded-none"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </motion.div>
                           </button>
                           
-                          {isExpanded && (
-                            <div className="p-6 border-t-2 border-black bg-swiss-muted/30 font-sans text-xs text-gray-600 leading-relaxed uppercase animate-fade-in">
-                              {faq.answer}
-                            </div>
-                          )}
-                        </div>
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: expoOut }}
+                                className="overflow-hidden"
+                              >
+                                <div className="p-6 border-t-2 border-black bg-swiss-muted/30 font-sans text-xs text-gray-600 leading-relaxed uppercase">
+                                  {faq.answer}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
                       );
                     })}
                   </div>
@@ -511,11 +632,12 @@ export default function App() {
                   <div className="absolute inset-0 swiss-grid-pattern opacity-10 pointer-events-none"></div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-                    {sortedProperties.map((p) => (
+                    {sortedProperties.map((p, i) => (
                       <PropertyCard 
                         key={p.id} 
                         property={p} 
-                        onClick={handlePropertyClick} 
+                        onClick={handlePropertyClick}
+                        index={i % 3}
                       />
                     ))}
                   </div>
@@ -776,11 +898,12 @@ export default function App() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {similarProperties.map((p) => (
+                    {similarProperties.map((p, i) => (
                       <PropertyCard 
                         key={p.id} 
                         property={p} 
-                        onClick={handlePropertyClick} 
+                        onClick={handlePropertyClick}
+                        index={i}
                       />
                     ))}
                   </div>
@@ -874,7 +997,15 @@ export default function App() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {milestones.map((m, i) => (
-                    <div key={i} className="border-2 border-black p-6 bg-white flex flex-col justify-between hover:border-swiss-red transition-colors">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.5, delay: i * 0.1, ease: expoOut }}
+                      whileHover={{ y: -4 }}
+                      className="border-2 border-black p-6 bg-white flex flex-col justify-between hover:border-swiss-red transition-[border-color] duration-200"
+                    >
                       <div>
                         <span className="font-sans font-black text-3xl text-swiss-red block mb-4">
                           {m.year}
@@ -889,7 +1020,7 @@ export default function App() {
                       <span className="font-mono text-[9px] text-gray-300 tracking-widest block mt-8">
                         STAGE 0{i + 1}
                       </span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -902,8 +1033,15 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {agents.map((agent) => (
-                    <div key={agent.id} className="border-2 border-black bg-white flex flex-col h-full group hover:border-swiss-red transition-all hover:shadow-[4px_4px_0_0_#000000]">
+                  {agents.map((agent, i) => (
+                    <motion.div
+                      key={agent.id}
+                      initial={{ opacity: 0, y: 40 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ duration: 0.5, delay: i * 0.12, ease: expoOut }}
+                      className="border-2 border-black bg-white flex flex-col h-full group hover:border-swiss-red transition-[border-color,box-shadow] hover:shadow-[4px_4px_0_0_#000000]"
+                    >
                       <div className="aspect-square bg-swiss-muted border-b-2 border-black overflow-hidden relative">
                         {/* Dot Matrix overlay */}
                         <div className="absolute inset-0 swiss-dots opacity-25"></div>
@@ -942,7 +1080,7 @@ export default function App() {
                           </a>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

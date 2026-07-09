@@ -5,11 +5,13 @@
 
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { motion } from 'motion/react';
 import { Property } from '../types';
 
 interface PropertyCardProps {
   property: Property;
   onClick: (propertyId: string) => void;
+  index?: number;
 }
 
 export function formatPrice(price: number, status: string): string {
@@ -23,7 +25,7 @@ export function formatPrice(price: number, status: string): string {
   }
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, index = 0 }) => {
   const { id, title, location, price, areaSqFt, configuration, status, type, images } = property;
   const displayPrice = formatPrice(price, status);
 
@@ -53,9 +55,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
   };
 
   return (
-    <article 
+    <motion.article
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1]
+      }}
+      whileHover={{ y: -4 }}
       onClick={() => onClick(id)}
-      className="bg-white border-2 border-black rounded-none flex flex-col h-full cursor-pointer hover:-translate-y-px hover:border-swiss-red hover:shadow-[0_4px_0_0_#FF3000] active:translate-y-0 transition-all duration-100 ease-out select-none group"
+      className="bg-white border-2 border-black rounded-none flex flex-col h-full cursor-pointer hover:border-swiss-red hover:shadow-[0_4px_0_0_#FF3000] active:translate-y-0 transition-[border-color,box-shadow] duration-100 ease-out select-none group"
       id={`property-card-${id}`}
     >
       {/* Image Container */}
@@ -72,7 +83,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
           src={images[0]} 
           alt={`${configuration} in ${location}, Sai Properties ID ${id}`}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover transition-transform duration-300 ease-out group-hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
 
@@ -85,7 +96,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
               ID: {id}
             </span>
             <div className="bg-black text-white group-hover:bg-swiss-red p-1 transition-colors duration-150 rounded-none">
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:rotate-45" />
+              <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:rotate-45" />
             </div>
           </div>
 
@@ -127,7 +138,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick }) => {
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 

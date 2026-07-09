@@ -3,10 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { motion } from 'motion/react';
+import { ArrowUpRight } from 'lucide-react';
+
 interface FooterProps {
   setView: (view: string) => void;
   onClearSelectedProperty: () => void;
 }
+
+const expoOut = [0.16, 1, 0.3, 1] as const;
 
 export default function Footer({ setView, onClearSelectedProperty }: FooterProps) {
   const handleFooterNav = (viewId: string) => {
@@ -18,10 +23,23 @@ export default function Footer({ setView, onClearSelectedProperty }: FooterProps
   };
 
   return (
-    <footer className="bg-white border-t-4 border-black text-black select-none" id="footer-section">
+    <motion.footer
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.6, ease: expoOut }}
+      className="bg-white border-t-4 border-black text-black select-none"
+      id="footer-section"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-black">
         {/* Brand Col */}
-        <div className="lg:col-span-8 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-black flex flex-col justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1, ease: expoOut }}
+          className="lg:col-span-8 p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-black flex flex-col justify-between"
+        >
           <div>
             <div className="font-sans font-black text-4xl md:text-5xl lg:text-6xl tracking-tighter text-black mb-4">
               SAI PROPERTIES
@@ -43,26 +61,35 @@ export default function Footer({ setView, onClearSelectedProperty }: FooterProps
               <span className="font-sans font-bold text-xs tracking-wider text-gray-500 block">REGISTRATION NO. 412098-B</span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Navigation Column */}
-        <div className="lg:col-span-4 p-8 md:p-12 flex flex-col bg-swiss-muted swiss-grid-pattern">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2, ease: expoOut }}
+          className="lg:col-span-4 p-8 md:p-12 flex flex-col bg-swiss-muted swiss-grid-pattern"
+        >
           <span className="font-mono text-xs text-swiss-red tracking-widest mb-6 block">01. DIRECTORY</span>
           <div className="flex flex-col space-y-4">
-            <button onClick={() => handleFooterNav('home')} className="text-left font-sans font-bold text-sm tracking-wider hover:text-swiss-red transition-colors w-max uppercase">
-              HOME ARCHIVE
-            </button>
-            <button onClick={() => handleFooterNav('listings')} className="text-left font-sans font-bold text-sm tracking-wider hover:text-swiss-red transition-colors w-max uppercase">
-              PROPERTY INDEX
-            </button>
-            <button onClick={() => handleFooterNav('about')} className="text-left font-sans font-bold text-sm tracking-wider hover:text-swiss-red transition-colors w-max uppercase">
-              ABOUT AGENCY
-            </button>
-            <button onClick={() => handleFooterNav('contact')} className="text-left font-sans font-bold text-sm tracking-wider hover:text-swiss-red transition-colors w-max uppercase">
-              CONTACT & INQUIRY
-            </button>
+            {[
+              { id: 'home', label: 'HOME ARCHIVE' },
+              { id: 'listings', label: 'PROPERTY INDEX' },
+              { id: 'about', label: 'ABOUT AGENCY' },
+              { id: 'contact', label: 'CONTACT & INQUIRY' },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleFooterNav(item.id)}
+                className="text-left font-sans font-bold text-sm tracking-wider hover:text-swiss-red transition-colors w-max uppercase group flex items-center"
+              >
+                {item.label}
+                <ArrowUpRight className="w-3.5 h-3.5 ml-1.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+              </button>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Lower Footer: Copyright & Stamp */}
@@ -77,9 +104,9 @@ export default function Footer({ setView, onClearSelectedProperty }: FooterProps
         </div>
         <div className="mt-4 md:mt-0 font-mono text-[10px] text-gray-400 tracking-widest flex items-center uppercase">
           METRIC CLASSIFICATION: CLASS 1 SECURE APPMETRIC
-          <span className="w-2 h-2 bg-swiss-red ml-2 inline-block"></span>
+          <span className="w-2 h-2 bg-swiss-red ml-2 inline-block animate-status-blink"></span>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
